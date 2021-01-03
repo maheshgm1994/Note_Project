@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% extends "base.html"%}
+
+{% block body_block %}
+{% load static %}
+
+<div class="container ">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-login my-5">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Log-In</h5>
+                    <form method="POST" action="{% url 'login_user' %}" class="form-login">
+                        {% csrf_token %}
+                        <div class="form-label-group">
+                            <label for="inputUsername">UserName</label>
+                            <input type="text" id="inputUsername" name="username" class="form-control"
+                                placeholder="username" value="{{username}}" required autofocus>
+
+                        </div>
+                        <br>
+                        <div class="form-label-group">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" id="inputPassword" name="password" class="form-control"
+                                placeholder="Password" required>
+
+                        </div>
+
+                        <br>
+                        <button class="btn btn-lg btn-primary btn-block " type="submit">log-in</button>
+
+                        <div>
+
+                            <a href="{% url 'signUp' %}" class="nav-link text-right text-dark"><span
+                                    class="text-info">SignUp
+                                    {%if message %}
+                                    <span class="text-center text-danger">{{message}}</span>
+                                    {% endif %}
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

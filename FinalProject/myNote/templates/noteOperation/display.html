@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+{% extends "base1.html"%}
+
+{% block body_block %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<style>
+.column {
+  float: left;
+  width: 50%;
+  padding: 0 10px;
+}
+
+/* Remove extra left and right margins, due to padding */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  padding: 1 10px;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin: 10px 10px 10px;
+    padding: 0 10px;
+  }
+}
+
+/* Style the counter cards */
+.card{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+.card-body{
+    height : 150px;
+    text-align:justify;
+    overflow:auto;
+}
+</style>
+
+<div class="container">
+
+
+    <div class="float-right " style="padding:3px">
+
+         <form class="form-inline" method="POST" action="{% url 'searchText' %}" >
+            {% csrf_token%}
+                 <input class="form-control mr-sm-2" required type="text"
+                        id="searchText"
+                        name="text"
+                       placeholder="Search From Backend">
+             <button class="btn btn-success" id="searchBtn" type="submit">Search</button>
+        </form>
+
+    </div>
+    <br>
+
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary btn-lg btn-block" data-target="#staticBackdrop" data-toggle="modal"
+        type="button">addNewNote</button>
+    <div class="row">
+    {% for show in displayNotes %}
+    <br>
+    <div class="column " style="heigh:200px">
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">
+                <h4 class="card-title ">{{show.name}}</h4>
+                <!--  <small class="text-muted">added on {{show.added_on}}</small>-->
+            </div>
+            <div class="float-right">
+                <img class="card-img-top rounded-circle img-thumbnail" height="60px" src="" style="cursor:pointer"
+                    width="80px" />
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{show.text}}</p>
+        </div>
+        <div class="card-footer">
+            <small class="text-muted float-left">
+                <i class="text-primary">updated on </i>
+                {{show.updated_on}}</small>
+            <div class="float-right">
+
+                <button class="btn btn-warning edit" name="{{show.id}}" data-target="#editStaticBackdrop"
+                    data-toggle="modal">editNote</button>
+
+                <button class="btn btn-danger"><a class="text-white" href="/deleteNote/{{show.id}}">delete</a>
+                </button>
+            </div>
+        </div>
+    </div>
+        </div>
+    {% endfor %}
+    </div>
+  </div>
+
+    <!-- Add Modal -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+        data-keyboard="false" id="staticBackdrop" tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">AddNote</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form class="row needs-validation form" action="{% url 'addNote' %}" enctype="multipart/form-data"
+                        method="POST" novalidate>
+                        {% csrf_token %}
+                        <div class="col-sm-12">
+                            <div class="form-outline">
+                                <label class="form-label" for="validationCustom01">Name</label>
+
+                                <input class="form-control" id="validationCustom01" name="note_name" minlength="3"
+                                    required type="text" />
+
+                                <div class="invalid-feedback">Please provide a valid name.</div>
+                                <div class="valid-feedback">Looks good!</div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-outline">
+                                <label class="form-label" for="validationCustom02">Text</label>
+                                <textarea class="form-control" id="validationCustom02" name="note_text" minlength="10"
+                                    required type="text">
+                                </textarea>
+                                <div class="invalid-feedback">Please provide a valid title.</div>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
+
+                        <!--                        <div class="col-sm-12">-->
+                        <!--                            <div class="form-outline">-->
+                        <!--                                <label class="form-label" for="validationCustom03">picture</label>-->
+                        <!--                                <input class="form-control" id="validationCustom03" name="note_img" type="file"/>-->
+
+                        <!--                                <div class="invalid-feedback">Please select image.</div>-->
+                        <!--                                <div class="valid-feedback">Looks good!</div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+
+                        <div class="modal-footer">
+                            <button class="btn btn-warning" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-success" type="submit">createNote</button>
+                        </div>
+
+                    </form>
+
+                    <script>
+                        // Example starter JavaScript for disabling form submissions if there are invalid fields
+                        (() => {
+                            'use strict';
+
+                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                            const forms = document.querySelectorAll('.needs-validation');
+
+                            // Loop over them and prevent submission
+
+                            Array.prototype.slice.call(forms).forEach((form) => {
+                                form.addEventListener('submit', (event) => {
+                                    if (!form.checkValidity()) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                    form.classList.add('was-validated');
+                                }, false);
+                            });
+                        })();
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- edit Modal -->
+    <div aria-hidden="true" aria-labelledby="editStaticBackdropLabel" class="modal fade" data-backdrop="static"
+        data-keyboard="false" id="editStaticBackdrop" tabindex="-2">
+
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editStaticBackdropLabel">EditNote</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form class="row needs-validation form" enctype="multipart/form-data" method="post" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" id="editValidationCustomID">
+                        <div class="col-sm-12">
+                            <div class="form-outline">
+                                <label class="form-label" for="editValidationCustom01">Name</label>
+                                <input class="form-control" id="editValidationCustom01" name="note_name" minlength="3"
+                                    required type="text" />
+
+                                <div class="invalid-feedback">Please provide a valid name.</div>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-outline">
+                                <label class="form-label" for="editValidationCustom02">Text</label>
+                                <textarea class="form-control" id="editValidationCustom02" name="note_text"
+                                    minlength="10" required type="text">
+                                </textarea>
+                                <div class="invalid-feedback">Please provide a valid title.</div>
+                                <div class="valid-feedback">Looks good!</div>
+                            </div>
+                        </div>
+
+                        <!--                        <div class="col-sm-12">-->
+                        <!--                            <div class="form-outline">-->
+                        <!--                                <label class="form-label" for="editValidationCustom03">picture</label>-->
+                        <!--                                <input class="form-control" id="editValidationCustom03" name="note_img" type="file"/>-->
+
+                        <!--                                <div class="invalid-feedback">Please select image.</div>-->
+                        <!--                                <div class="valid-feedback">Looks good!</div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+
+                        <div class="modal-footer">
+                            <button class="btn btn-warning" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-success" id="update1">UpdateNote</button>
+                        </div>
+
+                    </form>
+
+                    <script>
+                        // Example starter JavaScript for disabling form submissions if there are invalid fields
+                        (() => {
+                            'use strict';
+
+                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                            const forms = document.querySelectorAll('.needs-validation');
+
+                            // Loop over them and prevent submission
+
+                            Array.prototype.slice.call(forms).forEach((form) => {
+                                form.addEventListener('submit', (event) => {
+                                    if (!form.checkValidity()) {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+                                    }
+                                    form.classList.add('was-validated');
+                                }, false);
+                            });
+                        })();
+                    </script>
+
+
+                    <script type="text/javascript">
+                        $('.edit').click(function () {
+                            x = $(this).attr('name')
+                            $.ajax({
+                                url: '/editNote/' + x,
+                                beforeSend: function () {
+
+                                },
+                                success: function (data) {
+                                    $("#editValidationCustomID").val(data['id']);
+                                    $("#editValidationCustom01").val(data['note_name']);
+                                    $("#editValidationCustom02").val(data['note_text']);
+                                }
+                            });
+                        })
+
+                    </script>
+
+
+
+                    <script type="text/javascript">
+                        $('#update1').click(function () {
+                            x = $("#editValidationCustomID").val()
+                            $.ajax({
+                                url: '/updateNote/' + x,
+                                type: "POST",
+                                data: {
+                                    note_name: $("#editValidationCustom01").val(),
+                                    note_text: $("#editValidationCustom02").val(),
+                                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                                },
+                                success: function (data, textStatus, xhr) {
+                                    console.log(xhr.status);
+
+                                    if (xhr.status == 200) {
+                                        setTimeout(function () {
+                                            $("#update").hide();
+                                            $('.modal').modal("hide");
+                                        }, 100);
+                                    }
+                                    if (xhr.status == 302) {
+                                        alert('testing 302')
+                                    }
+                                    else if (xhr.status == 403) {
+                                        $('#editError').show()
+                                    }
+                                }
+                            })
+                        })
+                    </script>
+
+
+
+
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "master.html" %}
+
+{% block body %}
+
+<h2>Summary</h2>
+
+<table cellpadding="2pt">
+    <tr>
+        <td>Total Expenditure</td>
+        <td class="colhead" style="text-align:right"> {{summary.total | floatformat:2}} </td>
+    </tr>
+    <tr>
+        <td>No. of Entries </td>
+        <td class="colhead" style="text-align:right"> {{summary.count}} </td>
+    </tr>
+</table>
+
+{% endblock %}

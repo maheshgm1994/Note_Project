@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <title>NotesBlog</title>
+  <link rel="icon" href="title_img.jpeg" type="image/x-icon">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    .tdStyle {
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg py-3 navbar-dark bg-info navbar-fixed-top shadow-sm">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">
+        <!-- Logo Image -->
+<!--        <img src="/static/images/orchids.jpeg" class="rounded-circle" width="75px" alt=""-->
+<!--          class="d-inline-block align-middle mr-2">-->
+        <!-- Logo Text -->
+        <span class="text-uppercase font-weight-bold">Welcome to Notes</span>
+      </a>
+
+      <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+        class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+
+        <ul class="navbar-nav ml-auto navbar-right">
+          <li class="nav-item"><a href="{% url 'signUp' %}" class="nav-link"><span
+                class="glyphicon glyphicon-user"></span> SignUp</a></li>
+          <li class="nav-item"><a href="{% url 'login_user' %}" class="nav-link"><span
+                class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+  </div>
+
+  {%block body_block%}
+
+  {%endblock %}
+  </div>
+
+</body>
+
+</html>
